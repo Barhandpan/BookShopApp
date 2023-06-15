@@ -1,0 +1,9 @@
+<div class="container">
+  <div *ngFor="let book of books" class="book-container">
+    <h2>{{ book.title }}</h2>
+    <img (click)="goToBookPage(book.id)" *ngIf="book.bookCoverPath" [src]="book.bookCoverPath" alt="Book Cover" class="book-image" />
+    <p class="book-description">{{ book.description }}</p>
+    <p>{{ book.price }} $</p>
+    <button (click)="addToCart(book)">Add to Cart</button>
+  </div>
+</div>

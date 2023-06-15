@@ -1,0 +1,12 @@
+<h2>Search Results for "{{ searchTerm }}"</h2>
+
+<div *ngIf="filteredBooks.length > 0">
+  <div *ngFor="let book of filteredBooks">
+    <h3>{{ book.title }}</h3>
+    <p>{{ book.description }}</p>
+  </div>
+</div>
+
+<div *ngIf="filteredBooks.length === 0">
+  <p>No books found.</p>
+</div>

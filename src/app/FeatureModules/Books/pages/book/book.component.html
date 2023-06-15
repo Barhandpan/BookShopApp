@@ -1,0 +1,10 @@
+<div *ngIf="book" class="book">
+  <div class="book-details">
+    <h2>{{ book.title }}</h2>
+    <p>Description: {{ book.description }}</p>
+    <p>Price: ${{ book.price.toFixed(2) }}</p>
+  </div>
+  <div class="book-cover">
+    <img [src]="book.bookCover" [alt]="book.title" />
+  </div>
+</div>

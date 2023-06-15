@@ -1,0 +1,22 @@
+<header>
+  <div class="header-container">
+    <div class="logo">
+      BOOKIFY
+    </div>
+    <nav class="navigation">
+      <button (click)="home()" class="home-button">Home</button>
+    </nav>
+    <div class="right-section">
+      <div class="cart">
+        <button (click)="cart()">
+          <i class="fa fa-shopping-cart cart-icon"></i>
+          <span class="cart-notification">({{ cartQuantity }})</span>
+        </button>
+      </div>
+      <div class="login-buttons">
+        <button (click)="login()">Login</button>
+        <button (click)="signup()">Sign up</button>
+      </div>
+    </div>
+  </div>
+</header>
