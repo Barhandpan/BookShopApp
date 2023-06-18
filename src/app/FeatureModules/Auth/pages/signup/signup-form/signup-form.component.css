@@ -1,0 +1,27 @@
+.signup-form {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+  max-width: 400px; /* Set the maximum width of the form */
+  margin: 0 auto; /* Center the form horizontally */
+}
+
+.signup-form .form-group {
+  display: grid;
+  grid-template-columns: 100px 1fr;
+  align-items: center;
+}
+
+.signup-form label {
+  text-align: right;
+  padding-right: 10px;
+}
+
+.signup-form .form-control {
+  width: 100%; /* Make the input fields occupy the available width */
+  max-width: 300px; /* Set the maximum width of the input fields */
+}
+
+.signup-form button {
+  justify-self: center;
+}

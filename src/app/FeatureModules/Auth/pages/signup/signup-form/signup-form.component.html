@@ -1,8 +1,13 @@
-<form [formGroup]="signupForm" (ngSubmit)="handleSubmit()">
+<form [formGroup]="signupForm" (ngSubmit)="handleSubmit()" class="signup-form" method="post">
   <div class="form-group">
-    <label for="name">Name:</label>
-    <input id="name" type="text" class="form-control" formControlName="name">
-    <div *ngIf="signupForm.get('name')?.invalid && signupForm.get('name')?.touched" class="error-message">Please enter a valid name</div>
+    <label for="firstName">First Name:</label>
+    <input id="firstName" type="text" class="form-control" formControlName="firstName">
+    <div *ngIf="signupForm.get('firstName')?.invalid && signupForm.get('firstName')?.touched" class="error-message">Please enter a valid first name</div>
+  </div>
+  <div class="form-group">
+    <label for="lastName">Last Name:</label>
+    <input id="lastName" type="text" class="form-control" formControlName="lastName">
+    <div *ngIf="signupForm.get('lastName')?.invalid && signupForm.get('lastName')?.touched" class="error-message">Please enter a valid last name</div>
   </div>
   <div class="form-group">
     <label for="email">Email:</label>
@@ -13,6 +18,11 @@
     <label for="password">Password:</label>
     <input id="password" type="password" class="form-control" formControlName="password">
     <div *ngIf="signupForm.get('password')?.invalid && signupForm.get('password')?.touched" class="error-message">Please enter a valid password (min. 6 characters)</div>
+  </div>
+  <div class="form-group">
+    <label for="confirmPassword">Confirm Password:</label>
+    <input id="confirmPassword" type="password" class="form-control" formControlName="confirmPassword">
+    <div *ngIf="signupForm.get('confirmPassword')?.invalid && signupForm.get('confirmPassword')?.touched" class="error-message">Please confirm your password</div>
   </div>
   <button type="submit" [disabled]="!signupForm.valid">Submit</button>
 </form>

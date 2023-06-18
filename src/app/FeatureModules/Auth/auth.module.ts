@@ -6,13 +6,15 @@ import { SignupComponent } from './pages/signup/signup/signup.component';
 import { LoginFormComponent } from './pages/login-form/login-form.component';
 import { SignupFormComponent } from './pages/signup/signup-form/signup-form.component';
 import { AuthGuard } from '../../Core/guards/auth.guard';
+import { AdminDashBoardComponent } from './pages/admin-dashboard/admin-dash-board/admin-dash-board.component';
 
 @NgModule({
   declarations: [
     LoginComponent,
     SignupComponent,
     LoginFormComponent,
-    SignupFormComponent
+    SignupFormComponent,
+    AdminDashBoardComponent
   ],
   imports: [
     SharedModule,

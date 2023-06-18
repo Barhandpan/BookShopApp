@@ -7,8 +7,6 @@ import { AuthService } from 'src/app/Core/Services/auth.service';
   templateUrl: './login-form.component.html',
   styleUrls: ['./login-form.component.css']
 })
-
-
 export class LoginFormComponent implements OnInit {
   loginForm!: FormGroup;
 
@@ -16,17 +14,20 @@ export class LoginFormComponent implements OnInit {
 
   ngOnInit(): void {
     this.loginForm = this.fb.group({
-      username: this.fb.control('', Validators.required),
+      email: this.fb.control('', [Validators.required, Validators.email]),
       password: this.fb.control('', Validators.required),
     });
   }
-
   handleSubmit(): void {
-    console.log(this.loginForm);
-    const username: string = this.loginForm.get('username')?.value;
+    const email: string = this.loginForm.get('email')?.value;
     const password: string = this.loginForm.get('password')?.value;
-    this.authService.login({username,password}).subscribe((res: any): void =>{
-      console.log(res)
-    })
+    this.authService.login({ email, password }).subscribe(
+      (res: any) => {
+        console.log(res);
+      },
+      (error: any) => {
+        console.error(error);
+      }
+    );
   }
 }

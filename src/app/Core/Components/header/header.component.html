@@ -13,9 +13,13 @@
           <span class="cart-notification">({{ cartQuantity }})</span>
         </button>
       </div>
-      <div class="login-buttons">
+      <div class="login-buttons" *ngIf="!isLoggedIn">
         <button (click)="login()">Login</button>
         <button (click)="signup()">Sign up</button>
+      </div>
+      <div class="account-buttons" *ngIf="isLoggedIn">
+        <button (click)="account()">Account</button>
+        <button (click)="logout()">Logout</button>
       </div>
     </div>
   </div>
