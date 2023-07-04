@@ -7,6 +7,7 @@ import { LoginFormComponent } from './pages/login-form/login-form.component';
 import { SignupFormComponent } from './pages/signup/signup-form/signup-form.component';
 import { AuthGuard } from '../../Core/guards/auth.guard';
 import { AdminDashBoardComponent } from './pages/admin-dashboard/admin-dash-board/admin-dash-board.component';
+import { AccountComponent } from './pages/account/account.component';
 
 @NgModule({
   declarations: [
@@ -14,7 +15,8 @@ import { AdminDashBoardComponent } from './pages/admin-dashboard/admin-dash-boar
     SignupComponent,
     LoginFormComponent,
     SignupFormComponent,
-    AdminDashBoardComponent
+    AdminDashBoardComponent,
+    AccountComponent
   ],
   imports: [
     SharedModule,

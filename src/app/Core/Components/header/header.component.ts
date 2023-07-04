@@ -54,7 +54,7 @@ export class HeaderComponent implements OnInit {
   }
 
   account(): void {
-    this.router.navigate(['/account']);
+    this.router.navigate(['auth/account']);
   }
 
   logout(): void {

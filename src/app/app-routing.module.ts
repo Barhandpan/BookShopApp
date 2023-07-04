@@ -25,6 +25,11 @@ const routes: Routes = [
     path: 'search-results',
     loadChildren: () => import('./Core/Components/search/search.module').then(m => m.SearchModule)
   },
+  {
+    path: 'auth/account',
+    loadChildren: () =>
+      import('./FeatureModules/Auth/auth.module').then((m) => m.AuthModule)
+  },
   { path: '**', redirectTo: '/books', pathMatch: 'full' },
 ];
 
