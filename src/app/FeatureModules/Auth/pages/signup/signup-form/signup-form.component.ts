@@ -40,7 +40,8 @@ export class SignupFormComponent implements OnInit {
       email,
       password,
       confirmPassword,
-      role: false // Set the role property to false
+      role: false, // Set the role property to false
+      discount: 0
     };
 
     this.authService.signup(signupData).subscribe(

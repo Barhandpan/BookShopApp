@@ -1,11 +1,11 @@
-<h2>Admin Dashboard</h2>
-
-<!-- Admin Information Edit -->
+<!-- Edit Admin Information -->
 <div>
   <h3>Edit Admin Information</h3>
   <form (ngSubmit)="updateAdminInfo()" #adminInfoForm="ngForm">
     <label for="name">Name:</label>
     <input type="text" id="name" name="name" [(ngModel)]="admin.name" required>
+    <label for="lastName">Last Name:</label>
+    <input type="text" id="lastName" name="lastName" [(ngModel)]="admin.lastName" required>
     <label for="email">Email:</label>
     <input type="email" id="email" name="email" [(ngModel)]="admin.email" required>
     <label for="password">Password:</label>
@@ -20,6 +20,8 @@
   <form (ngSubmit)="setDiscountPercentage()" #discountForm="ngForm">
     <label for="discount">Discount Percentage:</label>
     <input type="number" id="discount" name="discount" [(ngModel)]="discountPercentage" required>
+    <label for="userEmail">User Email:</label>
+    <input type="email" id="userEmail" name="userEmail" [(ngModel)]="userEmail" required>
     <button type="submit">Set Discount</button>
   </form>
 </div>

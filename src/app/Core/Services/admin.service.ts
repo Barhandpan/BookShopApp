@@ -21,8 +21,8 @@ export class AdminService {
   }
 
   // Set Discount Percentage
-  setDiscountPercentage(discountPercentage: number): Observable<any> {
-    return this.http.put(`${this.apiUrl}/discount`, { percentage: discountPercentage });
+  setDiscountPercentage(userEmail: string, discountPercentage: number): Observable<any> {
+    return this.http.put(`${this.apiUrl}/discount`, {userEmail, discountPercentage});
   }
 
   // Get Book List

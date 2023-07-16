@@ -42,8 +42,10 @@ export class CartService {
     return this._cartItemsSubject.asObservable();
   }
 
-  calculateTotalPrice() {
-    return this._cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
+  calculateTotalPrice(user: any) {
+    const totalPrice = this._cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
+    const discountedPrice = totalPrice - (totalPrice * user.discounts / 100);
+    return discountedPrice;
   }
   buyItems() {
     this.clearCart();

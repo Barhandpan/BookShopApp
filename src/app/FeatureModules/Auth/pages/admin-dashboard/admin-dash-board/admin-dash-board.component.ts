@@ -9,10 +9,12 @@ import { AdminService } from 'src/app/Core/Services/admin.service';
 export class AdminDashBoardComponent implements OnInit {
   admin: any = {
     name: '',
+    lastName: '', // Added property for last name
     email: '',
     password: ''
   };
   discountPercentage: number = 0;
+  userEmail: string = ''; // Added property for user email
   books: any[] = [];
   selectedBook: any = {};
   isEditing: boolean = false;
@@ -53,7 +55,7 @@ export class AdminDashBoardComponent implements OnInit {
 
   // Set Discount Percentage
   setDiscountPercentage(): void {
-    this.adminService.setDiscountPercentage(this.discountPercentage).subscribe(
+    this.adminService.setDiscountPercentage(this.userEmail,this.discountPercentage).subscribe(
       (response: any) => {
         console.log('Discount percentage set successfully:', response);
       },
