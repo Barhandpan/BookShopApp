@@ -1,13 +1,12 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, catchError, of,throwError } from 'rxjs';
+import { BehaviorSubject, Observable, catchError, of,throwError, map } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { tap } from 'rxjs/operators';
-import jwt_decode, { JwtPayload } from 'jwt-decode'; // Import jwt-decode library
+import jwt_decode, { JwtPayload } from 'jwt-decode';
 import { Router } from '@angular/router';
 
 interface DecodedToken extends JwtPayload {
-  // Define additional properties here if needed
-  [key: string]: any;
+  'http://schemas.microsoft.com/ws/2008/06/identity/claims/role': string;
 }
 @Injectable({
   providedIn: 'root'
@@ -27,17 +26,14 @@ export class AuthService {
   }
 
   login(data: { email: string; password: string }): Observable<any> {
-    return this.http.post('https://localhost:7132/api/Account/login', data).pipe(
+    return this.http.post('https://localhost:7132/api/Account/login', data, { responseType: 'text' }).pipe(
       tap((res: any) => {
-        const token: string = res.token;
-        const role: string = res.role;
+        const token: string = res;
         localStorage.setItem('token', token);
-        localStorage.setItem('role', role);
         this.setToken(token);
         this.setLoggedIn(true);
-        this.handleLoginRedirect(role);
+        this.handleLoginRedirect();
       }),
-
       catchError((error: any) => {
         console.error(error);
         throw error;
@@ -66,26 +62,20 @@ export class AuthService {
     );
   }
   getUserAccount(): Observable<any> {
-    // const token = localStorage.getItem('token');
-    //   const decodedToken: any = jwt_decode(token!);
       const url = 'https://localhost:7132/api/Account/user';
       const headers = new HttpHeaders({
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${this._token.getValue()}`,
-        // 'userEmail': decodedToken['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name']
       });
       const options = { headers: headers };
       return this.http.get<any>(url, options)
 }
   updateUserAccount(data: any): Observable<any> {
     const url = 'https://localhost:7132/api/Account/user';
-    const token = localStorage.getItem('token');
-      const decodedToken: any = jwt_decode(token!);
     const options = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${this._token.getValue()}`,
-        'userEmail': decodedToken['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name']
       })
     };
 
@@ -97,35 +87,28 @@ export class AuthService {
     );
   }
 
-  getDiscount(): Observable<number> {
-    const url = 'https://localhost:7132/api/Account/Discount';
-    const token = localStorage.getItem('token');
-    const decodedToken: any = jwt_decode(token!);
-    const options = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${this._token.getValue()}`,
-        'userEmail': decodedToken['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name']
-      })
-    };
-
-    return this.http.get<number>(url, options).pipe(
-      catchError((error: any) => {
-        console.error(error);
-        throw error;
-      })
-    );
-  }
+  // getDiscount(): Observable<number> {
+  //   const url = 'https://localhost:7132/api/Account/Discount';
+  //   const options = {
+  //     headers: new HttpHeaders({
+  //       'Content-Type': 'application/json',
+  //       'Authorization': `Bearer ${this._token.getValue()}`,
+  //     })
+  //   };
+  //   return this.http.get<number>(url, options).pipe(
+  //     catchError((error: any) => {
+  //       console.error(error);
+  //       throw error;
+  //     })
+  //   );
+  // }
 
   deleteUserAccount(): Observable<void> {
     const url = 'https://localhost:7132/api/Account/user';
-    const token = localStorage.getItem('token');
-      const decodedToken: any = jwt_decode(token!);
       const options = {
         headers: new HttpHeaders({
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${this._token.getValue()}`,
-          'userEmail': decodedToken['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name']
         })
       };
     return this.http.delete<void>(url,options).pipe(
@@ -145,17 +128,27 @@ export class AuthService {
     return !!token;
   }
 
-  isAdmin(): boolean {
-    const role = localStorage.getItem('role');
-    return role === 'admin';
+  isAdmin(): Observable<boolean> {
+    const url = 'https://localhost:7132/api/Account/Admin';
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${this._token.getValue()}`,
+    });
+    const options = { headers: headers };
+    return this.http.get<boolean>(url, options).pipe(
+      map((response: boolean) => response)
+    );
   }
 
-  private handleLoginRedirect(role: string): void {
-    if (role === 'admin' && this.isAdmin()) {
-      this.router.navigate(['/auth/admin-dashboard']);
-    } else {
-      this.router.navigate(['/']);
-    }
+
+  private handleLoginRedirect(): void {
+    this.isAdmin().subscribe((isAdmin: boolean) => {
+      if (isAdmin) {
+        this.router.navigate(['/auth/admin-dashboard']);
+      } else {
+        this.router.navigate(['/']);
+      }
+    });
   }
 
   private setToken(token: string | null): void {

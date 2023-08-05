@@ -54,7 +54,13 @@ export class HeaderComponent implements OnInit {
   }
 
   account(): void {
-    this.router.navigate(['auth/account']);
+    this.authService.isAdmin().subscribe(isAdmin => {
+      if (isAdmin) {
+        this.router.navigate(['/auth/admin-dashboard']);
+      } else {
+        this.router.navigate(['/auth/account']);
+      }
+    });
   }
 
   logout(): void {

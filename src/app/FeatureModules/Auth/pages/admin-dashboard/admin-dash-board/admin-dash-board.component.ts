@@ -1,39 +1,47 @@
 import { Component, OnInit } from '@angular/core';
 import { AdminService } from 'src/app/Core/Services/admin.service';
-
+import { AuthService } from 'src/app/Core/Services/auth.service';
+import { HttpClient } from '@angular/common/http';
 @Component({
   selector: 'app-admin-dash-board',
   templateUrl: './admin-dash-board.component.html',
-  styleUrls: ['./admin-dash-board.component.css']
+  styleUrls: ['./admin-dash-board.component.css'],
 })
 export class AdminDashBoardComponent implements OnInit {
   admin: any = {
-    name: '',
-    lastName: '', // Added property for last name
+    firstName: '',
+    lastName: '',
     email: '',
     password: ''
   };
-  discountPercentage: number = 0;
-  userEmail: string = ''; // Added property for user email
-  books: any[] = [];
-  selectedBook: any = {};
-  isEditing: boolean = false;
+  newBook: any = {
+    title: '',
+    description: '',
+    bookCoverPath: '',
+    price: 0
+  };
 
-  constructor(private adminService: AdminService) { }
+  AppUser: any = {
+    userEmail: '',
+    Discounts: 0,
+  };
+
+  isEditing: boolean = false;
+  bookdetails: any = {};
+  books: any[] = [];
+
+  constructor(private adminService: AdminService, private authService: AuthService, private http: HttpClient) { }
 
   ngOnInit(): void {
-    // Fetch Admin Information
     this.fetchAdminInfo();
-
-    // Fetch Book List
-    this.fetchBooks();
   }
 
-  // Fetch Admin Information
   fetchAdminInfo(): void {
-    this.adminService.getAdminInfo().subscribe(
+    this.authService.getUserAccount().subscribe(
       (response: any) => {
-        this.admin = response;
+        this.admin.firstName = response.firstName;
+        this.admin.lastName = response.lastName;
+        this.admin.email = response.email;
       },
       (error: any) => {
         console.error('Error fetching admin information:', error);
@@ -41,9 +49,8 @@ export class AdminDashBoardComponent implements OnInit {
     );
   }
 
-  // Update Admin Information
   updateAdminInfo(): void {
-    this.adminService.updateAdminInfo(this.admin).subscribe(
+    this.authService.updateUserAccount(this.admin).subscribe(
       (response: any) => {
         console.log('Admin information updated successfully:', response);
       },
@@ -53,89 +60,83 @@ export class AdminDashBoardComponent implements OnInit {
     );
   }
 
-  // Set Discount Percentage
-  setDiscountPercentage(): void {
-    this.adminService.setDiscountPercentage(this.userEmail,this.discountPercentage).subscribe(
+  setDiscount(): void {
+    this.adminService.setDiscountPercentage(this.AppUser).subscribe(
       (response: any) => {
-        console.log('Discount percentage set successfully:', response);
+        console.log('Discount set successfully:', response);
       },
       (error: any) => {
-        console.error('Error setting discount percentage:', error);
+        console.error('Error setting discount:', error);
       }
     );
   }
 
-  // Fetch Book List
-  fetchBooks(): void {
-    this.adminService.getBooks().subscribe(
-      (response: any) => {
-        this.books = response;
-      },
-      (error: any) => {
-        console.error('Error fetching book list:', error);
-      }
-    );
-  }
 
-  // Add New Book
-  addBook(): void {
-    this.selectedBook = {};
-    this.isEditing = true;
-  }
-
-  // Edit Book
+addBook(): void {
+  // Send the new book details to the server using HttpClient
+  this.http.post('https://localhost:7132/api/Books', this.newBook).subscribe(
+    (response: any) => {
+      // Handle the response if needed
+      console.log('Book added successfully:', response);
+    },
+    (error: any) => {
+      // Handle errors if necessary
+      console.error('Error adding book:', error);
+    }
+  );
+}
   editBook(book: any): void {
-    this.selectedBook = { ...book };
     this.isEditing = true;
+    this.bookdetails.bookId = book.id;
+    this.bookdetails = {
+      title: book.title,
+      author: book.author,
+      price: book.price
+    };
   }
-
-  // Update Book
-  updateBook(): void {
-    if (this.isEditing) {
-      // Update existing book
-      this.adminService.updateBook(this.selectedBook).subscribe(
+  getBook(): void {
+    if (this.bookdetails.bookId) {
+      this.adminService.getBookById(this.bookdetails.bookId).subscribe(
         (response: any) => {
-          console.log('Book updated successfully:', response);
-          this.fetchBooks(); // Refresh book list
-          this.cancelEdit();
+          this.bookdetails = response;
         },
         (error: any) => {
-          console.error('Error updating book:', error);
+          console.error('Error fetching book:', error);
         }
       );
     } else {
-      // Add new book
-      this.adminService.addBook(this.selectedBook).subscribe(
-        (response: any) => {
-          console.log('Book added successfully:', response);
-          this.fetchBooks(); // Refresh book list
-          this.cancelEdit();
-        },
-        (error: any) => {
-          console.error('Error adding book:', error);
-        }
-      );
+      console.error('Book ID is required');
     }
   }
 
-  // Delete Book
+  updateBook(): void {
+    const updatedBook = {
+      bookId: this.bookdetails.bookId,
+      updatedModel: this.bookdetails
+    };
+    this.adminService.updateBook(updatedBook).subscribe(
+      (response: any) => {
+        console.log('Book updated successfully:', response);
+        this.isEditing = false;
+        this.bookdetails.bookId = 0;
+        this.bookdetails = {};
+      },
+      (error: any) => {
+        console.error('Error updating book:', error);
+      }
+    );
+  }
+
   deleteBook(bookId: string): void {
     if (confirm('Are you sure you want to delete this book?')) {
       this.adminService.deleteBook(bookId).subscribe(
         (response: any) => {
           console.log('Book deleted successfully:', response);
-          this.fetchBooks(); // Refresh book list
         },
         (error: any) => {
           console.error('Error deleting book:', error);
         }
       );
     }
-  }
-
-  // Cancel Add/Edit Book
-  cancelEdit(): void {
-    this.selectedBook = {};
-    this.isEditing = false;
   }
 }

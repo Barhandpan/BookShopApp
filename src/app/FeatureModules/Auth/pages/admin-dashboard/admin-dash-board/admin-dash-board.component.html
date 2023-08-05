@@ -3,7 +3,7 @@
   <h3>Edit Admin Information</h3>
   <form (ngSubmit)="updateAdminInfo()" #adminInfoForm="ngForm">
     <label for="name">Name:</label>
-    <input type="text" id="name" name="name" [(ngModel)]="admin.name" required>
+    <input type="text" id="name" name="name" [(ngModel)]="admin.firstName" required>
     <label for="lastName">Last Name:</label>
     <input type="text" id="lastName" name="lastName" [(ngModel)]="admin.lastName" required>
     <label for="email">Email:</label>
@@ -17,11 +17,11 @@
 <!-- Set Discount Percentage -->
 <div>
   <h3>Set Discount Percentage</h3>
-  <form (ngSubmit)="setDiscountPercentage()" #discountForm="ngForm">
+  <form (ngSubmit)="setDiscount()" #discountForm="ngForm">
     <label for="discount">Discount Percentage:</label>
-    <input type="number" id="discount" name="discount" [(ngModel)]="discountPercentage" required>
+    <input type="number" id="discount" name="discount" [(ngModel)]="AppUser.Discounts" required>
     <label for="userEmail">User Email:</label>
-    <input type="email" id="userEmail" name="userEmail" [(ngModel)]="userEmail" required>
+    <input type="email" id="userEmail" name="userEmail" [(ngModel)]="AppUser.userEmail" required>
     <button type="submit">Set Discount</button>
   </form>
 </div>
@@ -30,40 +30,37 @@
 <div>
   <h3>Book Management</h3>
   <!-- Book List -->
-  <table>
-    <thead>
-      <tr>
-        <th>Title</th>
-        <th>Author</th>
-        <th>Price</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let book of books">
-        <td>{{ book.title }}</td>
-        <td>{{ book.author }}</td>
-        <td>{{ book.price }}</td>
-        <td>
-          <button (click)="editBook(book)">Edit</button>
-          <button (click)="deleteBook(book.id)">Delete</button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-
-  <!-- Add/Edit Book Form -->
-  <h4>Add/Edit Book</h4>
-  <form *ngIf="isEditing" (ngSubmit)="updateBook()" #bookForm="ngForm">
-    <label for="bookTitle">Title:</label>
-    <input type="text" id="bookTitle" name="bookTitle" [(ngModel)]="selectedBook.title" required>
-    <label for="bookAuthor">Author:</label>
-    <input type="text" id="bookAuthor" name="bookAuthor" [(ngModel)]="selectedBook.author" required>
-    <label for="bookPrice">Price:</label>
-    <input type="number" id="bookPrice" name="bookPrice" [(ngModel)]="selectedBook.price" required>
-    <button type="submit">Save</button>
+  <form (ngSubmit)="updateBook()" #bookForm="ngForm">
+    <div>
+      <label for="bookId">Book ID:</label>
+      <input type="number" id="bookId" name="bookId" [(ngModel)]="bookdetails.bookId" required>
+      <span class="validation-message" *ngIf="bookForm.controls['bookId']?.errors?.['required']">
+        Book ID is required.
+      </span>
+      <button type="button" (click)="getBook()">Get Book</button>
+    </div>
+    <br>
+    <label for="title">Title:</label>
+    <input type="text" id="title" name="title" [(ngModel)]="bookdetails.title" required>
+    <label for="author">Author:</label>
+    <input type="text" id="author" name="author" [(ngModel)]="bookdetails.author" required>
+    <label for="description">Description:</label>
+    <input type="text" id="description" name="description" [(ngModel)]="bookdetails.description" required>
+    <label for="price">Price:</label>
+    <input type="number" id="price" name="price" [(ngModel)]="bookdetails.price" required>
+    <button type="submit">Update</button>
   </form>
-
-  <!-- Add New Book Button -->
-  <button (click)="addBook()">Add New Book</button>
+<br>
+<!-- Add New Book Button -->
+  <form (ngSubmit)="addBook()" #addBookForm="ngForm">
+    <label for="title">Title:</label>
+    <input type="text" id="newTitle" name="title" [(ngModel)]="newBook.title" required>
+    <label for="author">Author:</label>
+    <input type="text" id="newAuthor" name="author" [(ngModel)]="newBook.author" required>
+    <label for="description">Description:</label>
+    <input type="text" id="newDescription" name="description" [(ngModel)]="newBook.description" required>
+    <label for="price">Price:</label>
+    <input type="number" id="newPrice" name="price" [(ngModel)]="newBook.price" required>
+    <button type="submit">Add Book</button>
+    </form>
 </div>
