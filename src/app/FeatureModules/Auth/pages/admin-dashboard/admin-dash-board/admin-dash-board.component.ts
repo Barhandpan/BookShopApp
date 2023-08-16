@@ -18,7 +18,8 @@ export class AdminDashBoardComponent implements OnInit {
     title: '',
     description: '',
     bookCoverPath: '',
-    price: 0
+    price: 0,
+    imgUrl:'',
   };
 
   AppUser: any = {
